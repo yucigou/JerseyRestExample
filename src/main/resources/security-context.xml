@@ -6,20 +6,36 @@
     xsi:schemaLocation="
     	http://www.springframework.org/schema/beans
     	http://www.springframework.org/schema/beans/spring-beans.xsd
-
         http://www.springframework.org/schema/security
         http://www.springframework.org/schema/security/spring-security.xsd">
 
+	<beans:bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <beans:property name="location" value="classpath:/app.properties" />
+    </beans:bean>
+    
 	<!-- Stateless RESTful services use BASIC authentication -->
-    <security:http create-session="stateless" pattern="/**">
-        <security:intercept-url pattern="/**" access="ROLE_REST"/>
-        <security:http-basic/>
-    </security:http>
+	<beans:bean id="digestFilter" class="org.springframework.security.web.authentication.www.DigestAuthenticationFilter">
+	  <beans:property name="userDetailsService" ref="userStore"/>
+	  <beans:property name="authenticationEntryPoint" ref="digestEntryPoint"/>
+	</beans:bean>
 
+	<beans:bean id="digestEntryPoint" class="org.springframework.security.web.authentication.www.DigestAuthenticationEntryPoint">
+	  <beans:property name="realmName" value="Europe PMC Grist API"/>
+	  <beans:property name="key" value="acegi"/>
+	  <beans:property name="nonceValiditySeconds" value="10"/>
+	</beans:bean>
+
+	<security:http create-session="stateless" entry-point-ref="digestEntryPoint" auto-config="true">
+	    <security:intercept-url pattern="/**/healthcheck" access="ROLE_ANONYMOUS,ROLE_USER" />
+   		<security:intercept-url pattern="/**" access="ROLE_USER" />
+   		<security:http-basic/>
+        <security:custom-filter ref="digestFilter" after="BASIC_AUTH_FILTER" />
+	</security:http>
+ 
     <security:authentication-manager>
         <security:authentication-provider>
-            <security:user-service>
-                <security:user name="rest" password="rest" authorities="ROLE_REST"/>
+            <security:user-service id="userStore">
+                <security:user name="${username_digest}" password="${password_digest}" authorities="ROLE_USER" />
             </security:user-service>
         </security:authentication-provider>
     </security:authentication-manager>

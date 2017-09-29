@@ -26,8 +26,7 @@
 	</beans:bean>
 
 	<security:http create-session="stateless" entry-point-ref="digestEntryPoint" auto-config="true">
-	    <security:intercept-url pattern="/**/healthcheck" access="ROLE_ANONYMOUS,ROLE_USER" />
-   		<security:intercept-url pattern="/**" access="ROLE_USER" />
+   		<security:intercept-url pattern="/**/api/hi/**" access="ROLE_USER" />
    		<security:http-basic/>
         <security:custom-filter ref="digestFilter" after="BASIC_AUTH_FILTER" />
 	</security:http>

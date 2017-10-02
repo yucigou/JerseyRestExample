@@ -4,12 +4,12 @@
 	<groupId>org.europepmc</groupId>
 	<artifactId>JerseyRestExample</artifactId>
 	<packaging>war</packaging>
-	<version>4.2</version>
+	<version>4.3</version>
 	<name>Jersey Rest Example</name>
 	<url>http://europepmc.org</url>
 
 	<properties>
-	    <spring.security.version>3.2.9.RELEASE</spring.security.version>
+	    <spring.security.version>3.2.10.RELEASE</spring.security.version>
 	</properties>
 
 	<repositories>

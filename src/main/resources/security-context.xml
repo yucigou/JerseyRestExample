@@ -25,8 +25,8 @@
 	  <beans:property name="nonceValiditySeconds" value="10"/>
 	</beans:bean>
 
-	<security:http create-session="stateless" entry-point-ref="digestEntryPoint" auto-config="true">
-   		<security:intercept-url pattern="/rest/api/hi/**" access="ROLE_USER" />
+	<security:http create-session="stateless" entry-point-ref="digestEntryPoint" auto-config="true" use-expressions="true">
+   		<security:intercept-url pattern="/rest/api/hi/**" access="hasRole('ROLE_USER')" />
    		<security:http-basic/>
         <security:custom-filter ref="digestFilter" after="BASIC_AUTH_FILTER" />
 	</security:http>
